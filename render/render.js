@@ -9,7 +9,7 @@
  */
 
 // import setting utils
-const globalSettings = window.parent.window.sysmocapApp.settings;
+const globalSettings = window.parent.window.keyanimecapApp.settings;
 
 var hipRotationOffset = 0.2
 
@@ -257,6 +257,7 @@ const rigRotation = (
             console.log("Can not found bone " + name);
         }
     }
+    else return
 };
 
 // Animate Position Helper Function
@@ -452,9 +453,9 @@ const animateVRM = (vrm, results) => {
     if (riggedLeftHand && fileType == "vrm") {
         rigRotation("LeftHand", {
             // Combine pose rotation Z and hand rotation X Y
-            z: riggedPose.LeftHand.z,
-            y: riggedLeftHand.LeftWrist.y,
             x: riggedLeftHand.LeftWrist.x,
+            y: riggedLeftHand.LeftWrist.y,
+            z: riggedPose.LeftHand.z,   
         });
         rigRotation("LeftRingProximal", riggedLeftHand.LeftRingProximal);
         rigRotation(
@@ -491,9 +492,9 @@ const animateVRM = (vrm, results) => {
         // riggedRightHand = Kalidokit.Hand.solve(rightHandLandmarks, "Right");
         rigRotation("RightHand", {
             // Combine Z axis from pose hand and X/Y axis from hand wrist rotation
-            z: riggedPose.RightHand.z,
-            y: riggedRightHand.RightWrist.y,
             x: riggedRightHand.RightWrist.x,
+            y: riggedRightHand.RightWrist.y,
+            z: riggedPose.RightHand.z,
         });
         rigRotation("RightRingProximal", riggedRightHand.RightRingProximal);
         rigRotation(

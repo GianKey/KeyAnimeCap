@@ -9,7 +9,7 @@
  */
 
 // import setting utils
-const globalSettings = window.parent.window.sysmocapApp.settings;
+const globalSettings = window.parent.window.keyanimecapApp.settings;
 
 var hipRotationOffset = 0.2
 
