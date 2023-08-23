@@ -1,6 +1,6 @@
 {
-  "name": "sysmocap",
-  "version": "0.6.2",
+  "name": "keyanimecap",
+  "version": "0.1.1",
   "description": "Video-based motion capture system.",
   "main": "main.js",
   "scripts": {
@@ -11,9 +11,11 @@
     "zip:win64": "electron-installer-zip ./OutApp/SysMocap-win32-x64/ ./OutApp/packages/SysMocap-Windows-x64.zip --overwrite",
     "zip:mac64": "electron-installer-zip ./OutApp/SysMocap-darwin-x64/ ./OutApp/packages/SysMocap-macOS-x64.zip --overwrite",
     "dmg": "electron-installer-dmg ./OutApp/SysMocap-darwin-x64/SysMocap.app SysMocap-macOS-x64 --out ./OutApp/packages/ --overwrite",
-    "dmgarm": "electron-installer-dmg ./OutApp/SysMocap-darwin-arm64/SysMocap.app SysMocap-macOS-aarch64 --out ./OutApp/packages/ --overwrite"
+    "dmgarm": "electron-installer-dmg ./OutApp/SysMocap-darwin-arm64/SysMocap.app SysMocap-macOS-aarch64 --out ./OutApp/packages/ --overwrite",
+    "electron:serve": "export NODE_OPTIONS=--openssl-legacy-provider &&vue-cli-service electron:serve",
+    "electron:buildicon": "export NODE_OPTIONS=--openssl-legacy-provider &&electron-icon-builder --input=./build/icons/icon.png --output=build --flatten"
   },
-  "author": "xianfei",
+  "author": "wangjian",
   "license": "ISC",
   "dependencies": {
     "@electron/remote": "^2.0.10",
@@ -22,6 +24,8 @@
     "@mediapipe/drawing_utils": "^0.3.1675466124",
     "@mediapipe/holistic": "^0.5.1675471629",
     "@pixiv/three-vrm": "^0.6.11",
+    "@vue/cli": "^5.0.8",
+    "@vue/cli-service": "~5.0.8",
     "color": "^4.2.3",
     "electron-localstorage": "^1.0.5",
     "express": "^4.18.2",

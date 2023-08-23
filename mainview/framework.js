@@ -189,7 +189,7 @@ if (typeof require != "undefined") {
         var theme = await themeFromSourceColor(argbFromHex(hex));
         applyTheme(theme, { target: document.body, dark: darkMode });
         console.log(theme)
-        ipcRenderer.send('tabChanged',window.sysmocapApp.tab,document.body.style.getPropertyValue('--md-sys-color-primary'),document.body.style.getPropertyValue('--md-sys-color-primary-container'));
+        ipcRenderer.send('tabChanged',window.keyanimecapApp.tab,document.body.style.getPropertyValue('--md-sys-color-primary'),document.body.style.getPropertyValue('--md-sys-color-primary-container'));
     };
     f();
 
@@ -290,8 +290,6 @@ if (typeof require != "undefined") {
                             }
                         };
                         setTimeout(()=>modelOnload(),500)
-                        
-                        
                     }
 
                     
@@ -309,7 +307,7 @@ if (typeof require != "undefined") {
                             target: document.body,
                             dark: app.settings.ui.isDark,
                         });
-                        ipcRenderer.send('tabChanged',window.sysmocapApp.tab,document.body.style.getPropertyValue('--md-sys-color-primary'),document.body.style.getPropertyValue('--md-sys-color-primary-container'));
+                        ipcRenderer.send('tabChanged',window.keyanimecapApp.tab,document.body.style.getPropertyValue('--md-sys-color-primary'),document.body.style.getPropertyValue('--md-sys-color-primary-container'));
                     };
                     f();
 
@@ -340,7 +338,7 @@ if (typeof require != "undefined") {
                 if(newVal)localStorage.setItem('disableUpdate',true)
             },
             tab:(a,b)=>{
-                ipcRenderer.send('tabChanged',window.sysmocapApp.tab,document.body.style.getPropertyValue('--md-sys-color-primary'),document.body.style.getPropertyValue('--md-sys-color-primary-container'));
+                ipcRenderer.send('tabChanged',window.keyanimecapApp.tab,document.body.style.getPropertyValue('--md-sys-color-primary'),document.body.style.getPropertyValue('--md-sys-color-primary-container'));
             }
         },
     });
@@ -365,7 +363,7 @@ if (typeof require != "undefined") {
         });
     });
 
-    window.sysmocapApp = app;
+    window.keyanimecapApp = app;
 
     remote.app.getGPUInfo("complete").then((info) => {
         app.glRenderer = info.auxAttributes.glRenderer;
@@ -590,7 +588,7 @@ ipcRenderer.on("sendRenderDataForward", (ev, data) => {
 });
 
 ipcRenderer.on("switch-tab", (ev, data) => {
-    window.sysmocapApp.tab = data;
+    window.keyanimecapApp.tab = data;
 });
 
 window.startMocap = async function (e) {
@@ -611,7 +609,7 @@ window.startMocap = async function (e) {
         localStorage.setItem("cameraId", app.camera);
         localStorage.setItem("videoFile", app.videoPath[0]);
 
-        if (window.sysmocapApp.settings.performance.useDescrertionProcess) {
+        if (window.keyanimecapApp.settings.performance.useDescrertionProcess) {
             const win = remote.getCurrentWindow();
             const bw = win.getBrowserView();
             var winWidth = parseInt(win.getSize()[0]);
@@ -624,7 +622,7 @@ window.startMocap = async function (e) {
                 height: parseInt(((winWidth - 40) * 10) / 32),
             });
             bw.webContents.loadFile("mocap/mocap.html");
-            if (window.sysmocapApp.settings.dev.openDevToolsWhenMocap)
+            if (window.keyanimecapApp.settings.dev.openDevToolsWhenMocap)
                 bw.webContents.openDevTools({ mode: "detach" });
             document.getElementById("foo").src = "../render/render.html";
         } else {
@@ -636,7 +634,7 @@ window.startMocap = async function (e) {
             app.language.tabMocap.stop;
     } else {
         isMocaping = false;
-        if (window.sysmocapApp.settings.performance.useDescrertionProcess) {
+        if (window.keyanimecapApp.settings.performance.useDescrertionProcess) {
             const win = remote.getCurrentWindow();
             const bw = win.getBrowserView();
             bw.setBounds({ x: 0, y: 0, width: 0, height: 0 });
@@ -644,7 +642,7 @@ window.startMocap = async function (e) {
         }
         document.getElementById("foo").src = "about:blank";
 
-        if (window.sysmocapApp.settings.forward.enableForwarding)
+        if (window.keyanimecapApp.settings.forward.enableForwarding)
             ipcRenderer.send("stopWebServer");
 
         e.innerHTML =
@@ -653,7 +651,7 @@ window.startMocap = async function (e) {
     }
 };
 
-if (window.sysmocapApp.settings.performance.useDescrertionProcess)
+if (window.keyanimecapApp.settings.performance.useDescrertionProcess)
     window.addEventListener(
         "resize",
         function () {
@@ -677,32 +675,32 @@ if (window.sysmocapApp.settings.performance.useDescrertionProcess)
 const versionCheck = require("github-version-checker");
 
 window.checkUpdate = () => {
-    if (window.sysmocapApp.checkingUpdate || window.sysmocapApp.isLatest) return;
-    window.sysmocapApp.checkingUpdate = true;
+    if (window.keyanimecapApp.checkingUpdate || window.keyanimecapApp.isLatest) return;
+    window.keyanimecapApp.checkingUpdate = true;
 
     // version check options (for details see below)
 const options = {
     repo: 'SysMocap',                    // repository name
     owner: 'xianfei',                               // repository owner
-    currentVersion: 'v' + window.sysmocapApp.appVersion,                       // your app's current version
+    currentVersion: 'v' + window.keyanimecapApp.appVersion,                       // your app's current version
   };
   
   versionCheck(options, function (error, update) { // callback function
-    window.sysmocapApp.updateError = null
+    window.keyanimecapApp.updateError = null
     if (error) {
-        window.sysmocapApp.updateError = error
-        window.sysmocapApp.checkingUpdate = false
+        window.keyanimecapApp.updateError = error
+        window.keyanimecapApp.checkingUpdate = false
         return
     }
     if (update) { // print some update info if an update is available
       console.log('An update is available! ' + update.name);
-      window.sysmocapApp.hasUpdate = update
+      window.keyanimecapApp.hasUpdate = update
     } else {
-        window.sysmocapApp.isLatest = true
+        window.keyanimecapApp.isLatest = true
     }
 
 
-  window.sysmocapApp.checkingUpdate = false
+  window.keyanimecapApp.checkingUpdate = false
     // start your app
     console.log('Check update finish');
     //...
@@ -712,4 +710,4 @@ const options = {
 window.openInGithub = () =>
     remote.shell.openExternal("https://github.com/xianfei/SysMocap/releases");
 
-if(!window.sysmocapApp.disableAutoUpdate) window.checkUpdate()
+if(!window.keyanimecapApp.disableAutoUpdate) window.checkUpdate()

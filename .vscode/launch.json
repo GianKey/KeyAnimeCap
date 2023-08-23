@@ -1,6 +1,16 @@
 {
     "version": "0.2.0",
     "configurations": [
+<<<<<<< HEAD
+=======
+      
+      {
+        "command": "npm start",
+        "name": "Run npm start",
+        "request": "launch",
+        "type": "node-terminal"
+      },
+>>>>>>> dev
       {
         "name": "Debug Main Process",
         "type": "node",
@@ -13,5 +23,9 @@
         "args" : ["."],
         "outputCapture": "std"
       }
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev
     ]
   }
