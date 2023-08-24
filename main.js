@@ -149,7 +149,7 @@ function createWindow() {
 
     ipcMain.on("sendRenderData", function (event, arg) {
         // console.log("sendRenderData")
-        mainWindow.webContents.send("sendRenderDataForward", arg);
+         mainWindow.webContents.send("sendRenderDataForward", arg);
     });
 
     // createWelcomeWindow()
