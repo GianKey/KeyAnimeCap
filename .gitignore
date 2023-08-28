@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+node_modules
+=======
 OutAPP/
 icons/tmp.iconset/*.png
 
@@ -106,3 +109,4 @@ dist
 # TernJS port file
 .tern-port
 .DS_Store
+>>>>>>> dev
