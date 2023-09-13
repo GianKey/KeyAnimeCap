@@ -1,48 +1,58 @@
-const djangoBk = path.join("F:/AI/BackEnd/AIBackEnd/mmpose_backend/mmpose_backend","mmpose_server/manage.py")
-djangoProcess = spawn('python', [backendPath, 'runserver']);
-// 监听子进程的标准输出
-djangoProcess.stdout.on('data', (data) => {
-    console.log(`Django stdout: ${data}`);
-  });
-// 监听子进程的标准错误输出
-djangoProcess.stderr.on('data', (data) => {
-console.error(`Django stderr: ${data}`);
-});
+const { on } = require('events');
+var http = require('http');
+const QueryString = require('qs');
 
-  
-// 子进程关闭时的处理
-childProcess.on('close', (code) => {
-    onsole.log(`子进程退出，退出码：${code}`);
-});
-  
-// 向子进程发送数据
-childProcess.stdin.write('Hello, child process!');
-childProcess.stdin.end();
+var default_protocol = 'http://';
+var default_hostname = '127.0.0.1';
+var default_port = 8000;
 
-const http = require('http');
+exports.get = function get(path,on_data_callback, on_err_callback) {
+  var url = default_protocol + default_hostname +':'+ default_port + path;
+  var req = http.get(url, function onDjangoResponse(res) {
+      res.setEncoding('utf-8');
+      res.on('data', function onDjangoRequestGetData(data) {
+          on_data_callback(JSON.parse(data));
+      });
+      res.resume();
+    }).on('error', function onDjangoRequestGetError(e){
+      if(on_err_callback)
+         on_err_callback(e);
+      else
+         throw "error get" + url + "," + e;
+    });
+  } 
 
-const options = {
-  hostname: 'localhost',  // Django服务器的主机名
-  port: 8000,             // Django服务器的端口号
-  path: '/api/your_endpoint',  // 替换为你的API端点路径
-  method: 'GET',           // 请求方法，可以根据需要更改
-};
+  var cookie = require('cookie');
 
-const req = http.request(options, (res) => {
-  let data = '';
+  exports.post = function post(user_cookie,path,values,on_data_callback, on_err_callback) {
+    var cookies = cookie.parse(user_cookie)
+    var values = QueryString.stringify(values);
+    var options = {
+      hostname : default_hostname,
+      port: default_port,
+      path: path,
+      method: 'POST',
+      headers: {
+        'Cookie': user_cookie,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': values.length,
+        'X-CSRFToken': cookies['csrftoken'],
+      }
+    };
 
-  res.on('data', (chunk) => {
-    data += chunk;
-  });
-
-  res.on('end', () => {
-    console.log(`从Django获取的数据：${data}`);
-  });
-});
-
-req.on('error', (error) => {
-  console.error(`HTTP请求错误：${error}`);
-});
-
-req.end();
-后端进程
+    var post_req = http.request(options, function onDjangoResponse(res) {
+      res.setEncoding('utf-8');
+      res.on('data', function onDjangoRequestGetData(data) {
+          on_data_callback(JSON.parse(data));
+      });
+    
+    }).on('error', function onDjangoRequestGetError(e){ 
+      console.log(e);
+      if(on_err_callback)
+         on_err_callback(e);
+      else
+        throw "error get" + url + "," + e;
+    });
+    post_req.write(JSON.stringify(data));
+    post_req.end();
+  }
