@@ -53,6 +53,6 @@ exports.get = function get(path,on_data_callback, on_err_callback) {
       else
         throw "error get" + url + "," + e;
     });
-    post_req.write(JSON.stringify(data));
+    post_req.write(JSON.stringify(values));
     post_req.end();
   }

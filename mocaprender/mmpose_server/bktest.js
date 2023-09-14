@@ -1,5 +1,5 @@
 var django_request = require('./mmposeBk');
-
+var qs = require('querystring');
 // django_request.get('/pose/get_prediction_data',function(data){
 //     console.log('get_prediction_data 的返回：%j', data);
 // }, function(err) {
@@ -15,6 +15,7 @@ const { response } = require('express');
 const httpserver = http.createServer();
 var io =sio(httpserver, {
     log:true,
+    cors: true,
 });
 //console.log('io object:', io);
 chatroom.init(io);
@@ -24,6 +25,19 @@ httpserver.listen(port, function startapp(){
     console.log('nodejs app listening on' + port);
 });
 
+httpserver.on('request', function(request, response){
+    console.log('url: %s, method: %s', request.url, request.method);
+    switch (request.url) {
+        case '/node_get_data/':
+            onGetData(request, response);
+            break;
+        case '/node_post_data/':
+            onPostData(request, response);
+            break;
+        default:
+            break;
+    };
+});
 
 function onGetData(request, reponse){
     if(request.method == 'GET'){
@@ -57,6 +71,7 @@ function onPostData(request, reponse){
                'data2':'abc',
                 'post_data':post,
            }
+           //reponse(jsonobj)
            reponse.end(JSON.stringify(jsonobj));
         });
     }else{
