@@ -527,13 +527,19 @@
                             style="margin-top: 10px"
                             v-show="videoSource == 'file'"
                         >
-                            <button class="mdui-btn xf-button" id="chooseFile">
-                                {{language.tabMocap.chooseVideo}}
+                             <label for="mVideo"> {{language.tabMocap.chooseVideo}}</label>
+                            <input type ="file" value =language.tabMocap.chooseVideo
+                             name = "videoFile" id = "mVideo" accept="video/*">
+                             <button class="mdui-btn xf-button" id="uploadFile">
+                                上传
                             </button>
-                            <span style="margin-left: 10px"
+                            <!-- <button class="mdui-btn xf-button" id="chooseFile">
+                                {{language.tabMocap.chooseVideo}}
+                            </button> -->
+                            <!-- <span style="margin-left: 10px"
                                 >{{language.tabMocap.choosedVideo +
                                 (videoPath==''?language.tabMocap.unchoosed:videoPath)}}</span
-                            >
+                            > -->
                         </div>
                     </div>
                     <iframe

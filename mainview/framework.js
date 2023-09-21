@@ -8,6 +8,8 @@
  *  xianfei 2022.3
  */
 
+var mmposeServer = require('../mocaprender/mmposeBE/mmpose_server.js')
+
 var ipcRenderer = null;
 var remote = null;
 var platform = "web";
@@ -369,18 +371,34 @@ if (typeof require != "undefined") {
         app.glRenderer = info.auxAttributes.glRenderer;
     });
 
-    document.getElementById("chooseFile").onclick = async function () {
-        const result = await remote.dialog.showOpenDialogSync({
-            properties: ["openFile"],
-            filters: [
-                {
-                    name: "视频文件",
-                    extensions: ["mp4", "webm"],
-                },
-            ],
-        });
-        if (result) app.videoPath = result;
+   
+
+    var voideInput = document.querySelector('#mVideo')
+    var mVideoFile = null
+    voideInput.addEventListener('change', function (event) {
+        mVideoFile = event.target.files[0];
+    
+      });
+
+      document.getElementById("uploadFile").onclick = async function(){
+        var response = await mmposeServer.voideUpload(mVideoFile)
+        alert(response.data)
     };
+
+    // document.getElementById("chooseFile").onclick = async function () {
+    //     const result = await remote.dialog.showOpenDialogSync({
+    //         properties: ["openFile"],
+    //         filters: [
+    //             {
+    //                 name: "视频文件",
+    //                 extensions: ["mp4", "webm"],
+    //             },
+    //         ],
+    //     });
+    //     if (result) app.videoPath = result;
+
+        
+    // };
 
     // var inst = new mdui.Select("#demo-js");
 
@@ -622,65 +640,49 @@ function postVide2BE(){
 }
 
 
-window.startMocap = async function (e) {
-    if (process.platform == "darwin" && app.videoSource == "camera")
-        if (
-            remote.systemPreferences.getMediaAccessStatus("camera") !==
-            "granted"
-        ) {
-            if (!(await remote.systemPreferences.askForMediaAccess("camera"))) {
-                alert("需要授予摄像头使用权限");
-                return;
-            }
-        }
-    if (e.innerHTML.indexOf(app.language.tabMocap.start) != -1) {
-        isMocaping = true;
-        localStorage.setItem("modelInfo", app.selectModel);
-        localStorage.setItem("useCamera", app.videoSource);
-        localStorage.setItem("cameraId", app.camera);
-        localStorage.setItem("videoFile", app.videoPath[0]);
+// window.startMocap = async function (e) {
+//     if (process.platform == "darwin" && app.videoSource == "camera")
+//         if (
+//             remote.systemPreferences.getMediaAccessStatus("camera") !==
+//             "granted"
+//         ) {
+//             if (!(await remote.systemPreferences.askForMediaAccess("camera"))) {
+//                 alert("需要授予摄像头使用权限");
+//                 return;
+//             }
+//         }
+//     if (e.innerHTML.indexOf(app.language.tabMocap.start) != -1) {
+//         isMocaping = true;
+//         localStorage.setItem("modelInfo", app.selectModel);
+//         localStorage.setItem("useCamera", app.videoSource);
+//         localStorage.setItem("cameraId", app.camera);
+//         localStorage.setItem("videoFile", app.videoPath[0]);
 
-        if (window.keyanimecapApp.settings.performance.useDescrertionProcess) {
-            const win = remote.getCurrentWindow();
-            const bw = win.getBrowserView();
-            var winWidth = parseInt(win.getSize()[0]);
-            bw.setBounds({
-                x: parseInt(winWidth / 2),
-                y: parseInt(
-                    document.querySelector("#foo").getBoundingClientRect().y
-                ),
-                width: parseInt(winWidth / 2) - 20,
-                height: parseInt(((winWidth - 40) * 10) / 32),
-            });
-            bw.webContents.loadFile("mocap/mocap.html");
-            if (window.keyanimecapApp.settings.dev.openDevToolsWhenMocap)
-                bw.webContents.openDevTools({ mode: "detach" });
-            document.getElementById("foo").src = "../render/render.html";
-        } else {
-            document.getElementById("foo").src = "../mocaprender/render.html";
-        }
+//         e.innerHTML =
+//             '<i class="mdui-icon material-icons">stop</i>' +
+//             app.language.tabMocap.stop;
+//     } else {
+//         isMocaping = false;
+//         if (window.keyanimecapApp.settings.performance.useDescrertionProcess) {
+//             const win = remote.getCurrentWindow();
+//             const bw = win.getBrowserView();
+//             bw.setBounds({ x: 0, y: 0, width: 0, height: 0 });
+//             bw.webContents.loadURL("about:blank");
+//         }
+//         document.getElementById("foo").src = "about:blank";
 
-        e.innerHTML =
-            '<i class="mdui-icon material-icons">stop</i>' +
-            app.language.tabMocap.stop;
-    } else {
-        isMocaping = false;
-        if (window.keyanimecapApp.settings.performance.useDescrertionProcess) {
-            const win = remote.getCurrentWindow();
-            const bw = win.getBrowserView();
-            bw.setBounds({ x: 0, y: 0, width: 0, height: 0 });
-            bw.webContents.loadURL("about:blank");
-        }
-        document.getElementById("foo").src = "about:blank";
+//         if (window.keyanimecapApp.settings.forward.enableForwarding)
+//             ipcRenderer.send("stopWebServer");
 
-        if (window.keyanimecapApp.settings.forward.enableForwarding)
-            ipcRenderer.send("stopWebServer");
+//         e.innerHTML =
+//             '<i class="mdui-icon material-icons">play_arrow</i>' +
+//             app.language.tabMocap.start;
+//     }
+// };
 
-        e.innerHTML =
-            '<i class="mdui-icon material-icons">play_arrow</i>' +
-            app.language.tabMocap.start;
-    }
-};
+// window.startMocap =  async function(doc) {
+//     mmposeServer.voideUpload(app.videoPath[0])
+// };
 
 if (window.keyanimecapApp.settings.performance.useDescrertionProcess)
     window.addEventListener(
