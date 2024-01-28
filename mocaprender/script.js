@@ -40,6 +40,11 @@ let currentVrm = null;
 // Whether mediapipe ready
 var started = false;
 
+// key
+var isbeginPlay = false;
+///
+
+
 // renderer
 const renderer = new THREE.WebGLRenderer({
     alpha: true,
@@ -119,7 +124,9 @@ function animate() {
         context.drawImage(canvas, 0, 0, canvas2d.width, canvas2d.height);
     });
 }
+
 animate();
+
 
 var modelObj = JSON.parse(localStorage.getItem("modelInfo"));
 var modelPath = modelObj.path;
@@ -609,6 +616,9 @@ const animateVRM = (vrm, results) => {
     //     );
 };
 
+
+
+
 let videoElement = document.querySelector(".input_video"),
     guideCanvas = document.querySelector("canvas.guides");
 
@@ -619,7 +629,7 @@ const onResults = (results) => {
     // Animate model
     animateVRM(currentVrm, results);
     if (!started) {
-        document.getElementById("loading").remove();
+        //document.getElementById("loading").style.display = 'flex';
         if (localStorage.getItem("useCamera") == "file") videoElement.play();
         started = true;
     }
@@ -646,6 +656,7 @@ holistic.setOptions({
 });
 // Pass holistic a callback function
 holistic.onResults(onResults);
+
 
 const drawResults = (results) => {
     guideCanvas.width = videoElement.videoWidth;
@@ -695,6 +706,8 @@ const drawResults = (results) => {
     });
 };
 
+
+function keyStartMocap() { if(isbeginPlay){
 // switch use camera or video file
 if (localStorage.getItem("useCamera") == "camera") {
     navigator.mediaDevices
@@ -740,6 +753,7 @@ if (localStorage.getItem("useCamera") == "camera") {
 
     videoElement.requestVideoFrameCallback(videoFrameCallback);
 }
+}}
 
 var app = new Vue({
     el: "#controller",
@@ -765,7 +779,7 @@ function changeTarget(target) {
             z: 2,
         };
     }
-}
+
 
 // keyborad control camera position
 document.addEventListener("keydown", (event) => {
@@ -863,4 +877,5 @@ function stopRecording() {
             link.remove();
         }, 100);
     });
+}
 }

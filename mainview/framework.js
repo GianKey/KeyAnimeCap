@@ -210,7 +210,7 @@ if (typeof require != "undefined") {
                 ? localStorage.getItem("selectModel")
                 : JSON.stringify(builtInModels[0]),
             language: languages[globalSettings.ui.language],
-            videoSource: "camera",
+            videoSource: "file",
             videoPath: "",
             showModelImporter: 0,
             modelImporterName: "",
@@ -312,7 +312,7 @@ if (typeof require != "undefined") {
                         ipcRenderer.send('tabChanged',window.keyanimecapApp.tab,document.body.style.getPropertyValue('--md-sys-color-primary'),document.body.style.getPropertyValue('--md-sys-color-primary-container'));
                     };
                     f();
-
+                 
                     saveSettings(app.settings);
                     app.language = languages[app.settings.ui.language];
 
@@ -344,6 +344,7 @@ if (typeof require != "undefined") {
             }
         },
     });
+
 
     navigator.mediaDevices.enumerateDevices().then((mediaDevices) => {
         var lastChoosed = localStorage.getItem("last-choosed-camera");
@@ -677,7 +678,10 @@ window.startMocap = async function (e) {
                 bw.webContents.openDevTools({ mode: "detach" });
             document.getElementById("foo").src = "../render/render.html";
         } else {
-            document.getElementById("foo").src = "../mocaprender/render.html";
+            //key
+            //document.getElementById("foo").src = "../mocaprender/render.html";
+            document.getElementById("foo").contentWindow.isbeginPlay = true;
+            document.getElementById("foo").contentWindow.keyStartMocap();
         }
 
         e.innerHTML =
@@ -692,7 +696,9 @@ window.startMocap = async function (e) {
             bw.setBounds({ x: 0, y: 0, width: 0, height: 0 });
             bw.webContents.loadURL("about:blank");
         }
-        document.getElementById("foo").src = "about:blank";
+        //key
+        //document.getElementById("foo").src = "about:blank";
+        document.getElementById("foo").contentWindow.isbeginPlay = false;
 
         if (window.keyanimecapApp.settings.forward.enableForwarding)
             ipcRenderer.send("stopWebServer");
@@ -765,5 +771,7 @@ const options = {
 
 window.openInGithub = () =>
     remote.shell.openExternal("https://github.com/xianfei/SysMocap/releases");
+
+document.getElementById("foo").src = "../mocaprender/render.html";
 
 if(!window.keyanimecapApp.disableAutoUpdate) window.checkUpdate()

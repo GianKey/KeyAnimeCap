@@ -1,0 +1,16 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.scroll-container {
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh; /* 设置最大高度，超过高度时启用滚动条 */
+    overflow-y: auto; /* 使用滚动条 */
+    border: 1px solid #ccc;
+}
+
+.videoItem {
+    scale:90%;
+}
