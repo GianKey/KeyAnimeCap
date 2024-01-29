@@ -16,6 +16,7 @@ const {
     TouchBar,
     shell,
     nativeTheme,
+    ipcRenderer,
 } = require("electron");
 const { TouchBarLabel, TouchBarButton, TouchBarSpacer } = TouchBar
 const os = require("os");
@@ -263,7 +264,10 @@ function createWindow() {
         var color = Color(color1)
         color = color.darken(0.4)
         if(tab=='model') {a.backgroundColor = color.hex()}
-        if(tab=='render') {b.backgroundColor = color.hex()}
+        if(tab=='render') {
+            b.backgroundColor = color.red;
+            mainWindow.webContents.send('switch-tab', 'render');
+        }
         if(tab=='settings') {c.backgroundColor = color.hex()}
     })
 
@@ -472,3 +476,37 @@ app.on("activate", function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+//key
+
+
+ipcMain.on("videolisttoframework",function(event,videosrc) {
+    mainWindow.webContents.send("mainvideotoframework",(videosrc))
+})
+
+//const { app, BrowserWindow } = require('electron');
+var default_protocol = 'http://';
+var default_hostname = '127.0.0.1';
+var default_port = 8000; 
+var keyvideopath = '/myadmin/out_video_add/'
+
+const bkurl = default_protocol + default_hostname + ':' + default_port + keyvideopath ;
+let keyVideoUploadnWindow;
+
+function keycreateWindow() {
+  // 创建主窗口
+  keyVideoUploadnWindow = new BrowserWindow({ width: 800, height: 600 });
+
+  // 加载指定链接的内容
+  keyVideoUploadnWindow.loadURL(bkurl);
+
+  // 在窗口关闭时触发
+  keyVideoUploadnWindow.on('closed', function () {
+    keyVideoUploadnWindow = null;
+  });
+}
+
+ipcMain.on("keyvideoupload",function(event) {
+ 
+        keycreateWindow();
+})

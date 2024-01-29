@@ -13,4 +13,18 @@ body {
 
 .videoItem {
     scale:90%;
+    width: 100%;
+}
+
+
+.videoself{
+    width: 100%;
+}
+
+body, html {
+    overflow: hidden;
+}
+
+.highlighted {
+    border: 2px solid red;
 }

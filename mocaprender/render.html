@@ -59,16 +59,20 @@
                 position: fixed;
             "
         ></div>
-        <iframe id="videolist" src="videolist.html" style="
-        width: 23%;
-        height: calc(66vh);
-        left:1vw;
-        margin-top: 5vh;
-        border: solid 1px #ccc;
-                    border-radius: 10px;
-        z-index: 2;
-">
-</iframe>
+        <div style="overflow: hidden;">
+            <iframe id="videolist" src="video/videolist.html" style="
+            width: 23%;
+            height: calc(66vh);
+            left:1vw;
+            margin-top: 5vh;
+            border: solid 1px #ccc;
+                        border-radius: 10px;
+    
+            z-index: 2;
+    ">
+    </iframe>
+        </div>
+       
         <div class="preview">
             <!-- canvas for show body skeleton -->
             <canvas

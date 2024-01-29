@@ -706,8 +706,8 @@ const drawResults = (results) => {
     });
 };
 
-
-function keyStartMocap() { if(isbeginPlay){
+//key
+function keyStartMocap() {
 // switch use camera or video file
 if (localStorage.getItem("useCamera") == "camera") {
     navigator.mediaDevices
@@ -753,7 +753,8 @@ if (localStorage.getItem("useCamera") == "camera") {
 
     videoElement.requestVideoFrameCallback(videoFrameCallback);
 }
-}}
+//}}
+}
 
 var app = new Vue({
     el: "#controller",

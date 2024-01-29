@@ -341,6 +341,14 @@ if (typeof require != "undefined") {
             },
             tab:(a,b)=>{
                 ipcRenderer.send('tabChanged',window.keyanimecapApp.tab,document.body.style.getPropertyValue('--md-sys-color-primary'),document.body.style.getPropertyValue('--md-sys-color-primary-container'));
+                
+                ///key
+                if(a=='render'){
+                    document.getElementById("foo").src = "../mocaprender/render.html";
+                }
+                else{
+                    document.getElementById("foo").src = "about:blank";
+                }
             }
         },
     });
@@ -385,20 +393,26 @@ if (typeof require != "undefined") {
     //     var response = await mmposeServer.voideUpload(mVideoFile)
     //     alert(response.data)
     // };
+    
+    // ------key edit ------
 
-    document.getElementById("chooseFile").onclick = async function () {
-        const result = await remote.dialog.showOpenDialogSync({
-            properties: ["openFile"],
-            filters: [
-                {
-                    name: "视频文件",
-                    extensions: ["mp4", "webm"],
-                },
-            ],
-        });
-        if (result) app.videoPath = result;
+    // document.getElementById("chooseFile").onclick = async function () {
+    //     const result = await remote.dialog.showOpenDialogSync({
+    //         properties: ["openFile"],
+    //         filters: [
+    //             {
+    //                 name: "视频文件",
+    //                 extensions: ["mp4", "webm"],
+    //             },
+    //         ],
+    //     });
+    //     if (result) app.videoPath = result;
 
-        
+    // };
+
+
+    document.getElementById("chooseFile").onclick =  ()=>{
+       ipcRenderer.send("keyvideoupload");
     };
 
     var inst = new mdui.Select("#demo-js");
@@ -608,6 +622,10 @@ ipcRenderer.on("sendRenderDataForward", (ev, data) => {
 
 ipcRenderer.on("switch-tab", (ev, data) => {
     window.keyanimecapApp.tab = data;
+    //key 
+    if(data == 'render'){
+        document.getElementById("foo").src = "../mocaprender/render.html";
+    }
 });
 
 //< ----------- key  mmpose bk ------------ >
@@ -657,7 +675,8 @@ window.startMocap = async function (e) {
         localStorage.setItem("modelInfo", app.selectModel);
         localStorage.setItem("useCamera", app.videoSource);
         localStorage.setItem("cameraId", app.camera);
-        localStorage.setItem("videoFile", app.videoPath[0]);
+        //key edit
+        localStorage.setItem("videoFile", app.videoPath);
 
         //< ------------- key 3D model sence render    ------------>
 
@@ -680,8 +699,8 @@ window.startMocap = async function (e) {
         } else {
             //key
             //document.getElementById("foo").src = "../mocaprender/render.html";
-            document.getElementById("foo").contentWindow.isbeginPlay = true;
-            document.getElementById("foo").contentWindow.keyStartMocap();
+           // document.getElementById("foo").contentWindow.isbeginPlay = true;
+           document.getElementById("foo").contentWindow.keyStartMocap();
         }
 
         e.innerHTML =
@@ -698,7 +717,6 @@ window.startMocap = async function (e) {
         }
         //key
         //document.getElementById("foo").src = "about:blank";
-        document.getElementById("foo").contentWindow.isbeginPlay = false;
 
         if (window.keyanimecapApp.settings.forward.enableForwarding)
             ipcRenderer.send("stopWebServer");
@@ -772,6 +790,11 @@ const options = {
 window.openInGithub = () =>
     remote.shell.openExternal("https://github.com/xianfei/SysMocap/releases");
 
-document.getElementById("foo").src = "../mocaprender/render.html";
+//key
+//document.getElementById("foo").src = "../mocaprender/render.html";
+
+ipcRenderer.on("mainvideotoframework",function(event,video){
+    app.videoPath = video
+})
 
 if(!window.keyanimecapApp.disableAutoUpdate) window.checkUpdate()
