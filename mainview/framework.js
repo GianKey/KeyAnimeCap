@@ -8,8 +8,8 @@
  *  xianfei 2022.3
  */
 
-var mmposeServer = require('../mocaprender/mmposeBE/mmpose_server.js')
-
+//var mmposeServer = require('../mocaprender/mmposeBE/mmpose_server.js')
+var mmposeApi = require('../mocaprender/mmpose/mmposeApi.js')
 var ipcRenderer = null;
 var remote = null;
 var platform = "web";
@@ -701,6 +701,8 @@ window.startMocap = async function (e) {
             //document.getElementById("foo").src = "../mocaprender/render.html";
            // document.getElementById("foo").contentWindow.isbeginPlay = true;
            document.getElementById("foo").contentWindow.keyStartMocap();
+           
+            window.startMMposeMocap();
         }
 
         e.innerHTML =
@@ -717,6 +719,7 @@ window.startMocap = async function (e) {
         }
         //key
         //document.getElementById("foo").src = "about:blank";
+        
 
         if (window.keyanimecapApp.settings.forward.enableForwarding)
             ipcRenderer.send("stopWebServer");
@@ -727,9 +730,11 @@ window.startMocap = async function (e) {
     }
 };
 
-// window.startMocap =  async function(doc) {
-//     mmposeServer.voideUpload(app.videoPath[0])
-// };
+window.startMMposeMocap =  async function() {
+   var pose_data =await  mmposeApi.start_mmpose_inference(app.videoPath)
+   
+   console.log(pose_data)
+};
 
 if (window.keyanimecapApp.settings.performance.useDescrertionProcess)
     window.addEventListener(
