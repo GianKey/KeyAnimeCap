@@ -1,23 +1,12 @@
-import {
-	AnimationClip,
-	Bone,
-	FileLoader,
-	Loader,
-	Quaternion,
-	QuaternionKeyframeTrack,
-	Skeleton,
-	Vector3,
-	VectorKeyframeTrack
-} from 'three';
 
 /**
- * Description: reads BVH files and outputs a single Skeleton and an AnimationClip
+ * Description: reads BVH files and outputs a single THREE.Skeleton and an THREE.AnimationClip
  *
  * Currently only supports bvh files containing a single root.
  *
  */
 
-class BVHLoader extends Loader {
+class BVHLoader extends THREE.Loader {
 
 	constructor( manager ) {
 
@@ -32,7 +21,7 @@ class BVHLoader extends Loader {
 
 		const scope = this;
 
-		const loader = new FileLoader( scope.manager );
+		const loader = new THREE.FileLoader( scope.manager );
 		loader.setPath( scope.path );
 		loader.setRequestHeader( scope.requestHeader );
 		loader.setWithCredentials( scope.withCredentials );
@@ -147,17 +136,17 @@ class BVHLoader extends Loader {
 
 			const keyframe = {
 				time: frameTime,
-				position: new Vector3(),
-				rotation: new Quaternion()
+				position: new THREE.Vector3(),
+				rotation: new THREE.Quaternion()
 			};
 
 			bone.frames.push( keyframe );
 
-			const quat = new Quaternion();
+			const quat = new THREE.Quaternion();
 
-			const vx = new Vector3( 1, 0, 0 );
-			const vy = new Vector3( 0, 1, 0 );
-			const vz = new Vector3( 0, 0, 1 );
+			const vx = new THREE.Vector3( 1, 0, 0 );
+			const vy = new THREE.Vector3( 0, 1, 0 );
+			const vz = new THREE.Vector3( 0, 0, 1 );
 
 			// parse values for each channel in node
 
@@ -255,7 +244,7 @@ class BVHLoader extends Loader {
 
 			}
 
-			const offset = new Vector3(
+			const offset = new THREE.Vector3(
 				parseFloat( tokens[ 1 ] ),
 				parseFloat( tokens[ 2 ] ),
 				parseFloat( tokens[ 3 ] )
@@ -308,16 +297,16 @@ class BVHLoader extends Loader {
 		}
 
 		/*
-			recursively converts the internal bvh node structure to a Bone hierarchy
+			recursively converts the internal bvh node structure to a THREE.Bone hierarchy
 
 			source: the bvh root node
 			list: pass an empty array, collects a flat list of all converted THREE.Bones
 
-			returns the root Bone
+			returns the root THREE.Bone
 		*/
 		function toTHREEBone( source, list ) {
 
-			const bone = new Bone();
+			const bone = new THREE.Bone();
 			list.push( bone );
 
 			bone.position.add( source.offset );
@@ -338,11 +327,11 @@ class BVHLoader extends Loader {
 		}
 
 		/*
-			builds a AnimationClip from the keyframe data saved in each bone.
+			builds a THREE.AnimationClip from the keyframe data saved in each bone.
 
 			bone: bvh root node
 
-			returns: a AnimationClip containing position and quaternion tracks
+			returns: a THREE.AnimationClip containing position and quaternion tracks
 		*/
 		function toTHREEAnimation( bones ) {
 
@@ -385,19 +374,19 @@ class BVHLoader extends Loader {
 
 				if ( scope.animateBonePositions ) {
 
-					tracks.push( new VectorKeyframeTrack( bone.name + '.position', times, positions ) );
+					tracks.push( new THREE.VectorKeyframeTrack( bone.name + '.position', times, positions ) );
 
 				}
 
 				if ( scope.animateBoneRotations ) {
 
-					tracks.push( new QuaternionKeyframeTrack( bone.name + '.quaternion', times, rotations ) );
+					tracks.push( new THREE.QuaternionKeyframeTrack( bone.name + '.quaternion', times, rotations ) );
 
 				}
 
 			}
 
-			return new AnimationClip( 'animation', - 1, tracks );
+			return new THREE.AnimationClip( 'animation', - 1, tracks );
 
 		}
 
@@ -426,7 +415,7 @@ class BVHLoader extends Loader {
 		const threeClip = toTHREEAnimation( bones );
 
 		return {
-			skeleton: new Skeleton( threeBones ),
+			skeleton: new THREE.Skeleton( threeBones ),
 			clip: threeClip
 		};
 

@@ -10,8 +10,12 @@
 
 // import setting utils
 const globalSettings = window.parent.window.keyanimecapApp.settings;
+import { BVHLoader } from "./BVHLoader.js";
 
 var hipRotationOffset = 0.2
+
+let orbitCamera, orbitControls, scene, renderer;
+let mixer;
 
 // set theme
 document.body.setAttribute(
@@ -47,43 +51,54 @@ var isbeginPlay = false;
 ///
 
 
-// renderer
-const renderer = new THREE.WebGLRenderer({
-    alpha: true,
-    antialias: globalSettings.output.antialias,
-});
-renderer.setSize(
-    document.querySelector("#model").clientWidth,
-    (document.querySelector("#model").clientWidth / 16) * 9
-);
-renderer.setPixelRatio(window.devicePixelRatio);
-document.querySelector("#model").appendChild(renderer.domElement);
 
-window.addEventListener(
-    "resize",
-    function () {
-        orbitCamera.aspect = 16 / 9;
-        orbitCamera.updateProjectionMatrix();
-        renderer.setSize(
-            document.querySelector("#model").clientWidth,
-            (document.querySelector("#model").clientWidth / 16) * 9
-        );
-    },
-    false
-);
+function initRender(){
 
-// camera
-const orbitCamera = new THREE.PerspectiveCamera(35, 16 / 9, 0.1, 1000);
-orbitCamera.position.set(0.0, 1.4, 0.7);
+    // camera
+    orbitCamera = new THREE.PerspectiveCamera(35, 16 / 9, 0.1, 1000);
+    orbitCamera.position.set(0.0, 1.4, 0.7);
 
-// controls
-const orbitControls = new THREE.OrbitControls(orbitCamera, renderer.domElement);
-orbitControls.screenSpacePanning = true;
-orbitControls.target.set(0.0, 1.4, 0.0);
-orbitControls.update();
+    // scene
+    scene = new THREE.Scene();
 
-// scene
-const scene = new THREE.Scene();
+    scene.background = new THREE.Color( 0xeeeeee );
+    scene.add( new THREE.GridHelper( 400, 10 ) );
+
+    // renderer
+    renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: globalSettings.output.antialias,
+    });
+    renderer.setSize(
+        document.querySelector("#model").clientWidth,
+        (document.querySelector("#model").clientWidth / 16) * 9
+    );
+    renderer.setPixelRatio(window.devicePixelRatio);
+    document.querySelector("#model").appendChild(renderer.domElement);
+
+    // controls
+    orbitControls = new THREE.OrbitControls(orbitCamera, renderer.domElement);
+    orbitControls.screenSpacePanning = true;
+    orbitControls.target.set(0.0, 1.4, 0.0);
+    orbitControls.update();
+
+    window.addEventListener(
+        "resize",onWindowResize,false);
+      
+}
+
+initRender();
+
+
+function onWindowResize () {
+    orbitCamera.aspect = 16 / 9;
+    orbitCamera.updateProjectionMatrix();
+    renderer.setSize(
+        document.querySelector("#model").clientWidth,
+        (document.querySelector("#model").clientWidth / 16) * 9
+    );
+}
+
 
 // stats
 
@@ -114,6 +129,7 @@ function animate() {
     requestAnimationFrame(animate);
 
     stats.update();
+    if ( mixer ) mixer.update( delta );
 
     if (currentVrm) {
         // Update model to render physics
@@ -128,6 +144,21 @@ function animate() {
 }
 
 animate();
+
+
+const bvhloader = new BVHLoader();
+bvhloader.load( './animate/pose_resul.bvh', function ( result ) {
+
+    const bvhskeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
+
+    // scene.add( result.skeleton.bones[ 0 ] );
+    // scene.add( bvhskeletonHelper );
+
+    // play animation
+   // mixer = new THREE.AnimationMixer( result.skeleton.bones[ 0 ] );
+  //  mixer.clipAction( result.clip ).play();
+
+} );
 
 
 var modelObj = JSON.parse(localStorage.getItem("modelInfo"));
