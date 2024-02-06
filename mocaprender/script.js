@@ -62,7 +62,7 @@ function initRender(){
     scene = new THREE.Scene();
 
     scene.background = new THREE.Color( 0xeeeeee );
-    scene.add( new THREE.GridHelper( 400, 10 ) );
+    scene.add( new THREE.GridHelper( 10, 10 ) );
 
     // renderer
     renderer = new THREE.WebGLRenderer({
@@ -74,7 +74,7 @@ function initRender(){
         (document.querySelector("#model").clientWidth / 16) * 9
     );
     renderer.setPixelRatio(window.devicePixelRatio);
-    document.querySelector("#model").appendChild(renderer.domElement);
+
 
     // controls
     orbitControls = new THREE.OrbitControls(orbitCamera, renderer.domElement);
@@ -88,6 +88,7 @@ function initRender(){
 }
 
 initRender();
+document.querySelector("#model").appendChild(renderer.domElement);
 
 
 function onWindowResize () {
@@ -151,12 +152,12 @@ bvhloader.load( './animate/pose_resul.bvh', function ( result ) {
 
     const bvhskeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
 
-    // scene.add( result.skeleton.bones[ 0 ] );
-    // scene.add( bvhskeletonHelper );
+    scene.add( result.skeleton.bones[ 0 ] );
+    scene.add( bvhskeletonHelper );
 
-    // play animation
-   // mixer = new THREE.AnimationMixer( result.skeleton.bones[ 0 ] );
-  //  mixer.clipAction( result.clip ).play();
+    play animation
+   mixer = new THREE.AnimationMixer( result.skeleton.bones[ 0 ] );
+   mixer.clipAction( result.clip ).play();
 
 } );
 
