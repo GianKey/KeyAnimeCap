@@ -130,7 +130,8 @@ function animate() {
     requestAnimationFrame(animate);
 
     stats.update();
-    if ( mixer ) mixer.update( delta );
+    if ( mixer ) {
+        mixer.update(clock.getDelta())};
 
     if (currentVrm) {
         // Update model to render physics
@@ -148,18 +149,20 @@ animate();
 
 
 const bvhloader = new BVHLoader();
+let bvhskeletonHelper;
 bvhloader.load( './animate/pose_resul.bvh', function ( result ) {
 
-    const bvhskeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
+    bvhskeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
 
     scene.add( result.skeleton.bones[ 0 ] );
     scene.add( bvhskeletonHelper );
 
-    play animation
+   // play animation
    mixer = new THREE.AnimationMixer( result.skeleton.bones[ 0 ] );
    mixer.clipAction( result.clip ).play();
-
 } );
+
+
 
 
 var modelObj = JSON.parse(localStorage.getItem("modelInfo"));
