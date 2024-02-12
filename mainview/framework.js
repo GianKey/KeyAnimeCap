@@ -700,7 +700,9 @@ window.startMocap = async function (e) {
             //key
             //document.getElementById("foo").src = "../mocaprender/render.html";
            // document.getElementById("foo").contentWindow.isbeginPlay = true;
-           document.getElementById("foo").contentWindow.keyStartMocap();
+            document.getElementById("foo").contentWindow.keyStartMocap();
+
+
            
             window.startMMposeMocap();
         }

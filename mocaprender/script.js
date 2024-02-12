@@ -9,9 +9,11 @@
  */
 
 // import setting utils
-const globalSettings = window.parent.window.keyanimecapApp.settings;
-import { BVHLoader } from "./BVHLoader.js";
 
+
+const globalSettings = window.parent.window.keyanimecapApp.settings;
+const BVHLoader =  require( "./BVHLoader.js").BVHLoader;
+const bvhloadres = require("./BVHLoader.js").bvhloadres;
 var hipRotationOffset = 0.2
 
 let orbitCamera, orbitControls, scene, renderer;
@@ -33,7 +35,7 @@ if (globalSettings.forward.enableForwarding)
     ipcRenderer = require("electron").ipcRenderer;
 // my_server = require("../webserv/server.js");
 
-const animate_vrm = require('./animate/animate_vrm.js');
+const ainmate_vrm = require( "./animate/animate_vrm.js")
 
 // import Helper Functions from Kalidokit
 // const remap = Kalidokit.Utils.remap;
@@ -131,7 +133,8 @@ function animate() {
 
     stats.update();
     if ( mixer ) {
-        mixer.update(clock.getDelta())};
+        mixer.update(clock.getDelta())
+    };
 
     if (currentVrm) {
         // Update model to render physics
@@ -148,21 +151,13 @@ function animate() {
 animate();
 
 
+
 const bvhloader = new BVHLoader();
-let bvhskeletonHelper;
-bvhloader.load( './animate/pose_resul.bvh', function ( result ) {
-
-    bvhskeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
-
-    scene.add( result.skeleton.bones[ 0 ] );
-    scene.add( bvhskeletonHelper );
-
-   // play animation
-   mixer = new THREE.AnimationMixer( result.skeleton.bones[ 0 ] );
-   mixer.clipAction( result.clip ).play();
-} );
-
-
+let bvhSkeletonHelper;
+bvhloader.load('./animate/pose_resul.bvh', function ( result ) {
+    bvhloadres(result)
+}
+ );
 
 
 var modelObj = JSON.parse(localStorage.getItem("modelInfo"));
@@ -662,7 +657,7 @@ const onResults = (results) => {
     // Draw landmark guides
     if (globalSettings.preview.showSketelonOnInput) drawResults(results);
     // Animate model
-    animate_vrm.ainmate_vrm(currentVrm, results);
+    ainmate_vrm.ainmate_vrm(currentVrm, results);
     if (!started) {
         //document.getElementById("loading").style.display = 'flex';
         if (localStorage.getItem("useCamera") == "file") videoElement.play();

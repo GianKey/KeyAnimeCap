@@ -42,6 +42,8 @@
         <link rel="stylesheet" href="../node_modules/mdui/dist/css/mdui.css" />
         <script src="../node_modules/vue/dist/vue.js"></script>
         <script src="../node_modules/mdui/dist/js/mdui.js"></script>
+
+      
     </head>
 
     <body class="mdui-theme-layout-auto">
@@ -225,7 +227,18 @@
         <script src="../utils/RecordRTC.js"></script>
 
         <script src="../node_modules/kalidokit/dist/kalidokit.umd.js"></script>
-        <script type ="module" src="./script.js" defer></script>
-        <script type="module" src="BVHLoader.js"></script>
+
+        
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "../node_modules/three/build/three.module.js"
+                }
+            }
+        </script>
+    
+       <script type="module" src = "./BVHLoader.js"></script>
+        <script src="./script.js" defer></script>
+        
     </body>
 </html>
