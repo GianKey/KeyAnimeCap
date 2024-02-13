@@ -6,9 +6,22 @@
  * Currently only supports bvh files contai/ning a single root.
  *
  */
-import {SkeletonUtils} from"../node_modules/three/examples/jsm/utils/SkeletonUtils.js";
-import { BVHLoader}  from "../node_modules/three/examples/jsm/loaders/BVHLoader.js";
 
+// var SkeletonUtils
+// var BVHLoader
+// async function loadThreeES6Module() {
+//     try {
+//         // 使用 import() 函数加载 ES6 模块
+//          SkeletonUtils = await import("../node_modules/three/examples/jsm/utils/SkeletonUtils.js");
+//          BVHLoader = await import("../node_modules/three/examples/jsm/loaders/BVHLoader.js");
+//     } catch (error) {   
+//         console.error("Failed to load ES6 module:", error);
+//     }
+// }
+
+// import {SkeletonUtils} from "../node_modules/three/examples/jsm/utils/SkeletonUtils.js";
+// import { BVHLoader}  from "../node_modules/three/examples/jsm/loaders/BVHLoader.js";
+// loadThreeES6Module();
 
 var options;
 
@@ -85,7 +98,7 @@ options = {
     }
 };
 
-function bvhloadres ( result ) {
+function bvhloadres ( result ,play) {
 
     bvhSkeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
     bvhSkeletonHelper.skeleton = result.skeleton; // allow animation mixer to bind to THREE.SkeletonHelper directly
@@ -99,7 +112,7 @@ function bvhloadres ( result ) {
     scene.add( boneContainer );
 
     // get offsets when it is in T-Pose
-    options.offsets = SkeletonUtils.getSkeletonOffsets( player, bvhSkeletonHelper, options );
+    options.offsets = THREE.SkeletonUtils.getSkeletonOffsets( player, bvhSkeletonHelper, options );
 
     // play animation
     bvhMixer = new THREE.AnimationMixer( bvhSkeletonHelper );
@@ -529,5 +542,3 @@ module.exports.bvhloadres=bvhloadres
 // 	}
 
 // }
-
-module.exports.BVHLoader = BVHLoader;

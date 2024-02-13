@@ -30,6 +30,9 @@
 
         <script src="../node_modules/three/examples/js/libs/stats.min.js"></script>
 
+        <script src="../node_modules/three/examples/js/utils/SkeletonUtils.js"></script>
+        <script src="../node_modules/three/examples/js/loaders/BVHLoader.js"></script>
+
         <!-- VRM Loader for Three.js -->
         <script src="../node_modules/@pixiv/three-vrm/lib/three-vrm.js"></script>
         <!-- Mediapipe -->
@@ -42,7 +45,6 @@
         <link rel="stylesheet" href="../node_modules/mdui/dist/css/mdui.css" />
         <script src="../node_modules/vue/dist/vue.js"></script>
         <script src="../node_modules/mdui/dist/js/mdui.js"></script>
-
       
     </head>
 
@@ -237,7 +239,7 @@
             }
         </script>
     
-       <script type="module" src = "./BVHLoader.js"></script>
+        <script  src = "./BVHLoader.js" defer></script>
         <script src="./script.js" defer></script>
         
     </body>

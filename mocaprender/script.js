@@ -12,8 +12,8 @@
 
 
 const globalSettings = window.parent.window.keyanimecapApp.settings;
-const BVHLoader =  require( "./BVHLoader.js").BVHLoader;
-const bvhloadres = require("./BVHLoader.js").bvhloadres;
+
+const bvhloadres = require("./BVHLoader.js");
 var hipRotationOffset = 0.2
 
 let orbitCamera, orbitControls, scene, renderer;
@@ -148,16 +148,7 @@ function animate() {
     });
 }
 
-animate();
 
-
-
-const bvhloader = new BVHLoader();
-let bvhSkeletonHelper;
-bvhloader.load('./animate/pose_resul.bvh', function ( result ) {
-    bvhloadres(result)
-}
- );
 
 
 var modelObj = JSON.parse(localStorage.getItem("modelInfo"));
@@ -275,6 +266,18 @@ loader.load(
 
     (error) => console.error(error)
 );
+
+animate();
+
+
+
+const bvhloader = new THREE.BVHLoader();
+let bvhres;
+bvhloader.load('./animate/pose_resul.bvh', function ( result ) {
+    bvhres = result
+}
+ );
+ bvhloadres(bvhres,skeletonHelper)
 
 // Animate Rotation Helper function
 // const rigRotation = (
