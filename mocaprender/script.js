@@ -13,8 +13,10 @@
 
 const globalSettings = window.parent.window.keyanimecapApp.settings;
 
-const bvhloadres = require("./BVHLoader.js");
+const keybvhloadres = require("./BVHLoader.js").keybvhloadres;
+const keybvhloader = require("./BVHLoader.js").keybvhloader;
 var hipRotationOffset = 0.2
+var bvhSkeletonHelper, bvhMixer;
 
 let orbitCamera, orbitControls, scene, renderer;
 let mixer;
@@ -64,7 +66,15 @@ function initRender(){
     scene = new THREE.Scene();
 
     scene.background = new THREE.Color( 0xeeeeee );
-    scene.add( new THREE.GridHelper( 10, 10 ) );
+    // const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
+    // mesh.rotation.x = - Math.PI / 2;
+    // mesh.receiveShadow = true;
+    // scene.add(mesh);
+
+    const grid = new THREE.GridHelper(2000, 20, 0x000000, 0x000000);
+    grid.material.opacity = 0.2;
+    grid.material.transparent = true;
+    scene.add(grid);
 
     // renderer
     renderer = new THREE.WebGLRenderer({
@@ -132,10 +142,14 @@ function animate() {
     requestAnimationFrame(animate);
 
     stats.update();
-    if ( mixer ) {
-        mixer.update(clock.getDelta())
-    };
+    // if ( mixer ) {
+    //     mixer.update(clock.getDelta())
+    // };
 
+    if(bvhMixer){
+        bvhMixer.update( clock.getDelta());
+        //THREE.SkeletonUtils.retarget( model, bvhSkeletonHelper, options );
+    }
     if (currentVrm) {
         // Update model to render physics
         currentVrm.update(clock.getDelta());
@@ -195,8 +209,24 @@ loader.load(
     (gltf) => {
         var model = null;
         if (fileType == "fbx") {
+            gltf.scale.set(1, 1, 1);
+            
             model = gltf;
-            gltf.scale.set(0.01, 0.01, 0.01);
+            // model.traverse(function (child) {
+            //     if (child.isMesh) {
+            //         child.castShadow = true;
+            //         child.receiveShadow = true;
+            //         child.frustumCulled = false
+            //     }
+            // });
+            
+            if (!model.skeleton) {
+                model.traverse((child) => {
+                    if (!model.skeleton && child.skeleton) {
+                        model.skeleton = child.skeleton;
+                    }
+                });
+            }
         } else {
             model = gltf.scene;
         }
@@ -212,7 +242,8 @@ loader.load(
                 currentVrm.scene.rotation.y = Math.PI; // Rotate model 180deg to face camera
             });
         } else {
-            skeletonHelper = new THREE.SkeletonHelper(model);
+            //skeletonHelper = new THREE.SkeletonHelper(model);
+            skeletonHelper = new THREE.SkeletonHelper(model.skeleton.bones[0]);
             skeletonHelper.visible = true;
             scene.add(skeletonHelper);
             // for glb files
@@ -255,6 +286,33 @@ loader.load(
                 initRotation = modelObj.init;
             }
         }
+        bvhloader.load('./animate/pose_resul.bvh', function ( result ) {
+            bvhSkeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
+            bvhSkeletonHelper.skeleton = result.skeleton; // allow animation mixer to bind to THREE.SkeletonHelper directly
+        
+            //var boneContainer = new THREE.Group();
+            // boneContainer.add( result.skeleton.bones[ 0 ] );
+            // boneContainer.position.z = - 100;
+            // boneContainer.position.y = - 100;
+            //scene.add( result.skeleton.bones[ 0 ] );
+            //scene.add( bvhSkeletonHelper );
+            //scene.add( boneContainer );
+            
+            // get offsets when it is in T-Pose
+            options.fps = 1 / result.clip.tracks[0].times[1];
+            //options.offsets = THREE.SkeletonUtils.getSkeletonOffsets( model, bvhSkeletonHelper, options );
+            
+            let newClip = THREE.SkeletonUtils.retargetClip(model, bvhSkeletonHelper, result.clip, options);
+           
+            // play animation
+            bvhMixer = new THREE.AnimationMixer( model );
+            //bvhMixer.clipAction( result.clip ).setEffectiveWeight( 1.0 ).play();
+            //THREE.SkeletonUtils.retarget( model, bvhSkeletonHelper, options );
+            bvhMixer.clipAction(newClip).setEffectiveWeight( 1.0 ).play();
+            // let action =  bvhMixer.clipAction(newClip);
+            // action.play();
+        }
+         );
     },
 
     (progress) =>
@@ -269,15 +327,104 @@ loader.load(
 
 animate();
 
+var options;
 
+options = {
+    hip: "Hips",
+    // left is SEA3D bone names and right BVH bone names
+    names: {
+        "mixamorigHips" : "Hips",
+        "mixamorigSpine" : "Spine",
+        "mixamorigSpine1" : "spine-1",
+        "mixamorigSpine2" : "Spine3",
+        "mixamorigNeck" : "Neck",
+        "mixamorigHead" : "head",
 
-const bvhloader = new THREE.BVHLoader();
+        "mixamorigLeftShoulder" : "shoulder.L",
+        "mixamorigLeftArm" : "LeftArm",
+        "mixamorigLeftForeArm" : "LeftForeArm",
+        "mixamorigLeftHand" : "LeftHand",
+
+        "mixamorigLeftHandThumb1" : "f_thumb.01.L",
+        "mixamorigLeftHandThumb2" : "f_thumb.02.L",
+        "mixamorigLeftHandThumb3" : "f_thumb.03.L",
+
+        "mixamorigLeftHandIndex1" : "f_index.01.L",
+        "mixamorigLeftHandIndex2" : "f_index.02.L",
+        "mixamorigLeftHandIndex3" : "f_index.03.L",
+
+        "mixamorigLeftHandMiddle1" : "f_middle.01.L",
+        "mixamorigLeftHandMiddle2" : "f_middle.02.L",
+        "mixamorigLeftHandMiddle3" : "f_middle.03.L",
+
+        "mixamorigLeftHandRing1" : "f_ring.01.L",
+        "mixamorigLeftHandRing2" : "f_ring.02.L",
+        "mixamorigLeftHandRing3" : "f_ring.03.L",
+
+        "mixamorigLeftHandPinky1" : "f_pinky.01.L",
+        "mixamorigLeftHandPinky2" : "f_pinky.02.L",
+        "mixamorigLeftHandPinky3" : "f_pinky.03.L",
+
+        "mixamorigRightShoulder" : "shoulder.R",
+        "mixamorigRightArm" : "RightArm",
+        "mixamorigRightForeArm" : "RightForeArm",
+        "mixamorigRightHand" : "RightHand",
+
+        "mixamorigRightHandThumb1" : "f_thumb.01.R",
+        "mixamorigRightHandThumb2" : "f_thumb.02.R",
+        "mixamorigRightHandThumb3" : "f_thumb.03.R",
+
+        "mixamorigRightHandIndex1" : "f_index.01.R",
+        "mixamorigRightHandIndex2" : "f_index.02.R",
+        "mixamorigRightHandIndex3" : "f_index.03.R",
+
+        "mixamorigRightHandMiddle1" : "f_middle.01.R",
+        "mixamorigRightHandMiddle2" : "f_middle.02.R",
+        "mixamorigRightHandMiddle3" : "f_middle.03.R",
+
+        "mixamorigRightHandRing1" : "f_ring.01.R",
+        "mixamorigRightHandRing2" : "f_ring.02.R",
+        "mixamorigRightHandRing3" : "f_ring.03.R",
+
+        "mixamorigRightHandPinky1" : "f_pinky.01.R",
+        "mixamorigRightHandPinky2" : "f_pinky.02.R",
+        "mixamorigRightHandPinky3" : "f_pinky.03.R",
+
+        "mixamorigLeftUpLeg" : "LeftUpLeg",
+        "mixamorigLeftLeg" : "LeftLeg",
+        "mixamorigLeftFoot" : "LeftFoot",
+        "mixamorigLeftToeBase" : "toe.L",
+
+        "mixamorigRightUpLeg" : "RightUpLeg",
+        "mixamorigRightLeg" : "RightLeg",
+        "mixamorigRightFoot" : "RightFoot",
+        "mixamorigRightToeBase" : "toe.R"
+    }
+};
+
+const bvhloader = new keybvhloader();
 let bvhres;
-bvhloader.load('./animate/pose_resul.bvh', function ( result ) {
-    bvhres = result
-}
- );
- bvhloadres(bvhres,skeletonHelper)
+// bvhloader.load('./animate/pose_resul.bvh', function ( result ) {
+//     bvhSkeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
+//     bvhSkeletonHelper.skeleton = result.skeleton; // allow animation mixer to bind to THREE.SkeletonHelper directly
+
+//     var boneContainer = new THREE.Group();
+//     boneContainer.add( result.skeleton.bones[ 0 ] );
+//     boneContainer.position.z = - 100;
+//     boneContainer.position.y = - 100;
+//     scene.add( result.skeleton.bones[ 0 ] );
+//     scene.add( bvhSkeletonHelper );
+//     scene.add( boneContainer );
+    
+//     // get offsets when it is in T-Pose
+//     options.offsets = THREE.SkeletonUtils.getSkeletonOffsets( skeletonHelper, bvhSkeletonHelper, options );
+
+//     // play animation
+//     bvhMixer = new THREE.AnimationMixer( bvhSkeletonHelper );
+//     bvhMixer.clipAction( result.clip ).setEffectiveWeight( 1.0 ).play();
+// }
+//  );
+ //keybvhloadres(bvhres,skeletonHelper)
 
 // Animate Rotation Helper function
 // const rigRotation = (
