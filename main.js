@@ -480,8 +480,8 @@ app.on("activate", function () {
 //key
 
 
-ipcMain.on("videolisttoframework",function(event,videosrc) {
-    mainWindow.webContents.send("mainvideotoframework",(videosrc))
+ipcMain.on("videolisttoframework",function(event,videoData) {
+    mainWindow.webContents.send("mainvideotoframework",(videoData))
 })
 
 //const { app, BrowserWindow } = require('electron');

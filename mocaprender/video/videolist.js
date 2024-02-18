@@ -33,7 +33,7 @@ async function fetchData() {
             }
           // videoItem.onclick="highlightVideo(this)"
             videoItem.classList.add( 'videoItem')
-            videoItem.innerHTML = `<video src="${bkurl+video.url}" class = "videoself" controls></video> <p style="text-align: center;">${video.title}</p>`;
+            videoItem.innerHTML = `<video id="${video.id}"  src="${bkurl+video.url}" class = "videoself" controls></video> <p style="text-align: center;">${video.title}</p>`;
             videoListElement.appendChild(videoItem);
         });
     })
@@ -65,7 +65,11 @@ var videoslefs = document.querySelectorAll('video.videoself');
     clickedVideo.classList.add('highlighted');
     
    // eventEmitter.emit('videolisttoframework', clickedVideo.getElementsByTagName('video')[0].src);
-    ipcRenderer.send("videolisttoframework",(clickedVideo.getElementsByTagName('video')[0].src))
+   const videoData = {
+    src: clickedVideo.getElementsByTagName('video')[0].src,
+    id: clickedVideo.getElementsByTagName('video')[0].id
+  };
+    ipcRenderer.send("videolisttoframework",(videoData))
    
 }
 

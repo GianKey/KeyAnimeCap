@@ -101,7 +101,7 @@ function initRender(){
 
 initRender();
 document.querySelector("#model").appendChild(renderer.domElement);
-
+document.getElementById("videolist").src = "video/videolist.html";
 
 function onWindowResize () {
     orbitCamera.aspect = 16 / 9;
@@ -157,7 +157,7 @@ function animate() {
     renderer.render(scene, orbitCamera);
 
     if(isRecordingStarted)html2canvas(elementToRecord).then(function (canvas) {
-        context.clearRect(0, 0, canvas2d.width, canvas2d.height);
+        //context.clearRect(0, 0, canvas2d.width, canvas2d.height);
         context.drawImage(canvas, 0, 0, canvas2d.width, canvas2d.height);
     });
 }
@@ -202,12 +202,13 @@ if (fileType == "fbx") {
     loader = new THREE.GLTFLoader();
 }
 // Import Character
+var model = null;
 loader.crossOrigin = "anonymous";
 loader.load(
     modelPath,
 
     (gltf) => {
-        var model = null;
+       // var model = null;
         if (fileType == "fbx") {
             gltf.scale.set(1, 1, 1);
             
@@ -286,33 +287,33 @@ loader.load(
                 initRotation = modelObj.init;
             }
         }
-        bvhloader.load('./animate/pose_resul.bvh', function ( result ) {
-            bvhSkeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
-            bvhSkeletonHelper.skeleton = result.skeleton; // allow animation mixer to bind to THREE.SkeletonHelper directly
+        // bvhloader.load('./animate/pose_resul2.bvh', function ( result ) {
+        //     bvhSkeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
+        //     bvhSkeletonHelper.skeleton = result.skeleton; // allow animation mixer to bind to THREE.SkeletonHelper directly
         
-            //var boneContainer = new THREE.Group();
-            // boneContainer.add( result.skeleton.bones[ 0 ] );
-            // boneContainer.position.z = - 100;
-            // boneContainer.position.y = - 100;
-            //scene.add( result.skeleton.bones[ 0 ] );
-            //scene.add( bvhSkeletonHelper );
-            //scene.add( boneContainer );
+        //     //var boneContainer = new THREE.Group();
+        //     // boneContainer.add( result.skeleton.bones[ 0 ] );
+        //     // boneContainer.position.z = - 100;
+        //     // boneContainer.position.y = - 100;
+        //     //scene.add( result.skeleton.bones[ 0 ] );
+        //     //scene.add( bvhSkeletonHelper );
+        //     //scene.add( boneContainer );
             
-            // get offsets when it is in T-Pose
-            options.fps = 1 / result.clip.tracks[0].times[1];
-            //options.offsets = THREE.SkeletonUtils.getSkeletonOffsets( model, bvhSkeletonHelper, options );
+        //     // get offsets when it is in T-Pose
+        //     options.fps = 1 / result.clip.tracks[0].times[1];
+        //     //options.offsets = THREE.SkeletonUtils.getSkeletonOffsets( model, bvhSkeletonHelper, options );
             
-            let newClip = THREE.SkeletonUtils.retargetClip(model, bvhSkeletonHelper, result.clip, options);
+        //     let newClip = THREE.SkeletonUtils.retargetClip(model, bvhSkeletonHelper, result.clip, options);
            
-            // play animation
-            bvhMixer = new THREE.AnimationMixer( model );
-            //bvhMixer.clipAction( result.clip ).setEffectiveWeight( 1.0 ).play();
-            //THREE.SkeletonUtils.retarget( model, bvhSkeletonHelper, options );
-            bvhMixer.clipAction(newClip).setEffectiveWeight( 1.0 ).play();
-            // let action =  bvhMixer.clipAction(newClip);
-            // action.play();
-        }
-         );
+        //     // play animation
+        //     bvhMixer = new THREE.AnimationMixer( model );
+        //     //bvhMixer.clipAction( result.clip ).setEffectiveWeight( 1.0 ).play();
+        //     //THREE.SkeletonUtils.retarget( model, bvhSkeletonHelper, options );
+        //     bvhMixer.clipAction(newClip).setEffectiveWeight( 1.0 ).play();
+        //     // let action =  bvhMixer.clipAction(newClip);
+        //     // action.play();
+        // }
+        //  );
     },
 
     (progress) =>
@@ -325,7 +326,7 @@ loader.load(
     (error) => console.error(error)
 );
 
-animate();
+//animate();
 
 var options;
 
@@ -809,6 +810,7 @@ const onResults = (results) => {
     // Animate model
     ainmate_vrm.ainmate_vrm(currentVrm, results);
     if (!started) {
+        //document.getElementById("loading").style.display = 'none';
         //document.getElementById("loading").style.display = 'flex';
         if (localStorage.getItem("useCamera") == "file") videoElement.play();
         started = true;
@@ -935,6 +937,104 @@ if (localStorage.getItem("useCamera") == "camera") {
 }
 //}}
 }
+
+//key
+function keyStartMMposeMocap() {
+    // switch use camera or video file
+    //document.getElementById("loading").style.display = 'flex';
+    if (localStorage.getItem("useCamera") == "camera") {
+        navigator.mediaDevices
+            .getUserMedia({
+                video: {
+                    deviceId: localStorage.getItem("cameraId"),
+                    width: 1280,
+                    height: 720,
+                },
+            })
+            .then(function (stream) {
+                videoElement.srcObject = stream;
+                videoElement.play();
+                var videoFrameCallback = async () => {
+                    // videoElement.pause()
+                    await holistic.send({ image: videoElement });
+                    videoElement.requestVideoFrameCallback(videoFrameCallback);
+                    // videoElement.play()
+                };
+    
+                videoElement.requestVideoFrameCallback(videoFrameCallback);
+            })
+            .catch(function (err0r) {
+                alert(err0r);
+            });
+    } else {
+        // path of video file
+        videoElement.src = localStorage.getItem("videoFile");
+        videoElement.loop = true;
+        videoElement.controls = true;
+    
+        document.querySelector("#model").style.transform = "scale(-1, 1)";
+    
+        videoElement.style.transform = "";
+        guideCanvas.style.transform = "";
+    
+        var videoFrameCallback = async () => {
+            // videoElement.pause()
+            //await holistic.send({ image: videoElement });
+            videoElement.requestVideoFrameCallback(videoFrameCallback);
+            // videoElement.play()
+        };
+    
+        videoElement.requestVideoFrameCallback(videoFrameCallback);
+    }
+    //}}
+    }
+
+function displayWaitting2None(){
+    document.getElementById("loading").style.display = 'none';
+}
+
+function displayWaitting(){
+    document.getElementById("loading").style.display = 'flex';
+}
+
+function usePoseData(posedata){
+    // if (!model.skeleton) {
+    //     model.traverse((child) => {
+    //         if (!model.skeleton && child.skeleton) {
+    //             model.skeleton = child.skeleton;
+    //         }
+    //     });
+    // }
+    bvhloader.load(posedata, async function ( result ) {
+            bvhSkeletonHelper = new THREE.SkeletonHelper( result.skeleton.bones[ 0 ] );
+            bvhSkeletonHelper.skeleton = result.skeleton; // allow animation mixer to bind to THREE.SkeletonHelper directly
+        
+            //var boneContainer = new THREE.Group();
+            // boneContainer.add( result.skeleton.bones[ 0 ] );
+            // boneContainer.position.z = - 100;
+            // boneContainer.position.y = - 100;
+            //scene.add( result.skeleton.bones[ 0 ] );
+            //scene.add( bvhSkeletonHelper );
+            //scene.add( boneContainer );
+            
+            // get offsets when it is in T-Pose
+            options.fps = 1 / result.clip.tracks[0].times[1];
+            //options.offsets = THREE.SkeletonUtils.getSkeletonOffsets( model, bvhSkeletonHelper, options );
+            
+            let newClip = THREE.SkeletonUtils.retargetClip(model, bvhSkeletonHelper, result.clip, options);
+           
+            // play animation
+            bvhMixer = new THREE.AnimationMixer( model );
+            //bvhMixer.clipAction( result.clip ).setEffectiveWeight( 1.0 ).play();
+            //THREE.SkeletonUtils.retarget( model, bvhSkeletonHelper, options );
+            bvhMixer.clipAction(newClip).setEffectiveWeight( 1.0 ).play();
+            // let action =  bvhMixer.clipAction(newClip);
+            // action.play();
+        }
+         );
+         //animate();
+}
+animate();
 
 var app = new Vue({
     el: "#controller",

@@ -212,6 +212,7 @@ if (typeof require != "undefined") {
             language: languages[globalSettings.ui.language],
             videoSource: "file",
             videoPath: "",
+            videoid:"",
             showModelImporter: 0,
             modelImporterName: "",
             modelImporterType: "",
@@ -700,9 +701,7 @@ window.startMocap = async function (e) {
             //key
             //document.getElementById("foo").src = "../mocaprender/render.html";
            // document.getElementById("foo").contentWindow.isbeginPlay = true;
-            document.getElementById("foo").contentWindow.keyStartMocap();
-
-
+           // document.getElementById("foo").contentWindow.keyStartMMposeMocap();
            
             window.startMMposeMocap();
         }
@@ -733,8 +732,10 @@ window.startMocap = async function (e) {
 };
 
 window.startMMposeMocap =  async function() {
-   var pose_data =await  mmposeApi.start_mmpose_inference(app.videoPath)
-   
+   document.getElementById("foo").contentWindow.displayWaitting();
+   var pose_data =await  mmposeApi.start_mmpose_inference(app.videoPath,app.videoid)
+   document.getElementById("foo").contentWindow.displayWaitting2None();
+   await document.getElementById("foo").contentWindow.usePoseData(pose_data);
    console.log(pose_data)
 };
 
@@ -800,8 +801,9 @@ window.openInGithub = () =>
 //key
 //document.getElementById("foo").src = "../mocaprender/render.html";
 
-ipcRenderer.on("mainvideotoframework",function(event,video){
-    app.videoPath = video
+ipcRenderer.on("mainvideotoframework",function(event,videodata){
+    app.videoPath = videodata.src;
+    app.videoid = videodata.id;
 })
 
 if(!window.keyanimecapApp.disableAutoUpdate) window.checkUpdate()

@@ -64,7 +64,8 @@
             "
         ></div>
         <div style="overflow: hidden;">
-            <iframe id="videolist" src="video/videolist.html" style="
+            <!-- <iframe id="videolist" src="video/videolist.html" style=" -->
+            <iframe id="videolist" src="about:blank" style="
             width: 23%;
             height: calc(66vh);
             left:1vw;
@@ -118,8 +119,8 @@
                 position: fixed;
                 width: 400px;
                 height: 120px;
-                left: calc(50vw - 200px);
-                top: calc(50vh - 60px);
+                left: calc(50vw - 100px);
+                top: calc(30vh);
                 z-index: 1000;
                 background: #fffa;
                 border: solid 1px #ccc;
@@ -131,7 +132,7 @@
             "
             id="loading"
         >
-            正在初始化，请稍后
+            正在推理，请稍后
         </div>
 
         <div id="status" style="position: absolute; bottom: 120px">
@@ -239,7 +240,7 @@
             }
         </script>
     
-        <script  src = "./BVHLoader.js" defer></script>
+        <script  src = "./BVHLoader.js" ></script>
         <script src="./script.js" defer></script>
         
     </body>

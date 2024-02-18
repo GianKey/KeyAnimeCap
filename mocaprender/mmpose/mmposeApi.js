@@ -7,18 +7,25 @@ var default_protocol = 'http://';
 var default_hostname = '127.0.0.1';
 var default_port = 8000;
 
-exports.start_mmpose_inference = async function(inputPath) {
+exports.start_mmpose_inference = async function(inputPath,videoid) {
     try {
-      const videoFormData = new FormData();
-      videoFormData.append('inputvideopath', inputPath);
+      // const videoFormData = new FormData();
+      // videoFormData.append('inputvideopath', inputPath);
+      // videoFormData.append('videoid',videoid)
+      const jsonData = {
+        inputvideopath: inputPath,
+        videoid: videoid
+      };
+      
 
   
       const path = '/vendpoints/video_mocap/predict';
       const url = default_protocol + default_hostname + ':' + default_port + path;
   
-      const response = await axios.post(url, videoFormData, {
+      const response = await axios.post(url, jsonData, {
         headers: {
-          ...videoFormData.getHeaders(), // 获取FormData的headers
+          //...videoFormData.getHeaders(), // 获取FormData的headers
+          'Content-Type': 'application/json' 
         },
       });
   
