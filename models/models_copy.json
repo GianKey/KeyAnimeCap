@@ -1,0 +1,45 @@
+[
+    {
+        "name": "Vanguard",
+        "type": "fbx",
+        "isBuildIn": true,
+        "picBg": "../models/img/Vanguard.png",
+        "path": "../models/fbx/Vanguard.fbx",
+        "accessories": {}},
+    {
+        "name": "YBot",
+        "type": "fbx",
+        "isBuildIn": true,
+        "picBg": "../models/img/Vanguard.png",
+        "path": "../models/fbx/Y Bot.fbx",
+        "accessories": {}
+    },
+    {
+        "name": "Ch0",
+        "type": "fbx",
+        "isBuildIn": true,
+        "picBg": "../models/img/Vanguard.png",
+        "path": "../models/fbx/Ch03_nonPBR.fbx",
+        "accessories": {}
+        
+    },
+    {
+        "name": "Ch36",
+        "type": "fbx",
+        "isBuildIn": true,
+        "picBg": "../models/img/Vanguard.png",
+        "path": "../models/fbx/Ch36_nonPBR.fbx",
+        "accessories": {}
+        
+    },
+    {
+        "name": "Ch48",
+        "type": "fbx",
+        "isBuildIn": true,
+        "picBg": "../models/img/Vanguard.png",
+        "path": "../models/fbx/Ch48_nonPBR.fbx",
+        "accessories": {}
+        
+    }
+]
+

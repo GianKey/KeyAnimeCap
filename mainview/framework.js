@@ -199,7 +199,7 @@ if (typeof require != "undefined") {
     const { languages } = require("../utils/language.js");
 
     // import built-in models
-    var builtInModels = require("../models/models.json");
+    var builtInModels = require("../models/models_copy.json");
 
     var app = new Vue({
         el: "#vue-mount",
@@ -629,36 +629,6 @@ ipcRenderer.on("switch-tab", (ev, data) => {
     }
 });
 
-//< ----------- key  mmpose bk ------------ >
-function postVide2BE(){
-    // 当表单提交时
-    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const formData = new FormData();
-        formData.append('videoFile', document.querySelector('input[type="file"]').files[0]);
-
-        // 发送视频文件到Django视图
-        const response = await fetch('/upload_video/', {
-            method: 'POST',
-            body: formData
-        });
-
-        if (response.ok) {
-            console.log('视频上传成功');
-
-            // 等待一段时间后获取JSON数据
-            setTimeout(async () => {
-                const jsonResponse = await fetch('/get_json_data/');
-                const jsonData = await jsonResponse.json();
-                document.getElementById('jsonData').textContent = JSON.stringify(jsonData, null, 2);
-            }, 5000); // 5秒后获取JSON数据
-        } else {
-            console.error('视频上传失败');
-        }
-    });
-}
-
 
 window.startMocap = async function (e) {
     if (process.platform == "darwin" && app.videoSource == "camera")
@@ -711,6 +681,7 @@ window.startMocap = async function (e) {
             app.language.tabMocap.stop;
         //<--------------    -------------->
     } else {
+        document.getElementById("foo").contentWindow.resetModelPose();
         isMocaping = false;
         if (window.keyanimecapApp.settings.performance.useDescrertionProcess) {
             const win = remote.getCurrentWindow();
@@ -807,3 +778,10 @@ ipcRenderer.on("mainvideotoframework",function(event,videodata){
 })
 
 if(!window.keyanimecapApp.disableAutoUpdate) window.checkUpdate()
+
+const selectElement = document.getElementById("modelSelect");
+selectElement.addEventListener("change", function() {
+    // 获取选择的选项的值
+    localStorage.setItem("modelInfo", app.selectModel);
+    document.getElementById("foo").contentWindow.loadermodel();
+});
