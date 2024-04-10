@@ -701,11 +701,19 @@ window.startMocap = async function (e) {
             app.language.tabMocap.start;
     }
 };
+let videoElement = document.querySelector("input_video");
 
 window.startMMposeMocap =  async function() {
    document.getElementById("foo").contentWindow.displayWaitting();
    var pose_data =await  mmposeApi.start_mmpose_inference(app.videoPath,app.videoid)
    document.getElementById("foo").contentWindow.displayWaitting2None();
+
+   videoElement =  document.getElementById("foo").contentWindow.document.querySelector(".input_video");
+   videoElement.src = app.videoPath;
+   if (videoElement) {
+        // 播放视频
+        videoElement.play();
+    }
    await document.getElementById("foo").contentWindow.usePoseData(pose_data);
    console.log(pose_data)
 };
@@ -737,12 +745,6 @@ window.checkUpdate = () => {
     if (window.keyanimecapApp.checkingUpdate || window.keyanimecapApp.isLatest) return;
     window.keyanimecapApp.checkingUpdate = true;
 
-    // version check options (for details see below)
-const options = {
-    repo: 'SysMocap',                    // repository name
-    owner: 'xianfei',                               // repository owner
-    currentVersion: 'v' + window.keyanimecapApp.appVersion,                       // your app's current version
-  };
   
   versionCheck(options, function (error, update) { // callback function
     window.keyanimecapApp.updateError = null
@@ -766,8 +768,6 @@ const options = {
   });
 };
 
-window.openInGithub = () =>
-    remote.shell.openExternal("https://github.com/xianfei/SysMocap/releases");
 
 //key
 //document.getElementById("foo").src = "../mocaprender/render.html";

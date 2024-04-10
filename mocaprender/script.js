@@ -807,7 +807,7 @@ function keyStartMMposeMocap() {
             videoElement.requestVideoFrameCallback(videoFrameCallback);
             // videoElement.play()
         };
-    
+
         videoElement.requestVideoFrameCallback(videoFrameCallback);
     }
     //}}

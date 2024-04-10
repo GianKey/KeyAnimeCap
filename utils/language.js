@@ -30,13 +30,13 @@ module.exports = {
                 videoFile: "视频文件",
                 start: "开始",
                 stop: "停止",
-                chooseVideo: "选择视频文件",
+                chooseVideo: "选择上传视频文件",
                 choosedVideo: "已选择视频文件:",
                 unchoosed: "未选择",
                 chooseCamera: "选择摄像头",
             },
             tabSettings: {
-                desc: "计算机学院 2018级 王衔飞 毕业设计作品",
+                desc: "",
                 disableUpdate:'禁用自动检查更新',
                 document: {
                     name: "文档",

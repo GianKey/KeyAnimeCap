@@ -214,6 +214,6 @@ if (localStorage.getItem("useCamera") == "camera") {
         videoElement.requestVideoFrameCallback(videoFrameCallback);
         // videoElement.play()
     };
-
+    videoElement.play();
     videoElement.requestVideoFrameCallback(videoFrameCallback);
 }
