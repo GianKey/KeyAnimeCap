@@ -9,7 +9,7 @@ KeyAnimeCap
 跨平台的视频动作捕捉软件
 采用前后端分离的模式，此为前端，进行用户交互，驱动后端及展示。
 
-
+- [后端项目地址](https://github.com/GianKey/Key_Video_Mocap) 后端负责调用算法模型，进行视频分析推理，bvh动捕数据的计算生成。
 
 ### Features
 
