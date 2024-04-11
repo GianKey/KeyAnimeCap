@@ -7,7 +7,7 @@ KeyAnimeCap
 </p>
 
 跨平台的视频动作捕捉软件
-采用前后端分离的模式，此为前端
+采用前后端分离的模式，此为前端，进行用户交互，驱动后端及展示。
 
 
 
@@ -35,10 +35,10 @@ KeyAnimeCap
 
 
 #### 动捕界面
-![选择视频，开始动捕](screenshots/MocapStart.png)
-![后端推理结果可视化](screenshots/mocapResvideo1.gif)<center>后端推理结果可视化</center>
-![动捕结果展示1](screenshots/mocapResPlay.gif)<center>动捕结果展示1</center>
-![动捕结果展示2](screenshots/mocapResPlay2.gif)<center>动捕结果展示2</center>
+- 选择视频，开始动捕![选择视频，开始动捕](screenshots/MocapStart.png)
+- 后端推理结果可视化![后端推理结果可视化](screenshots/mocapResvideo1.gif)
+- 动捕结果展示1![动捕结果展示1](screenshots/mocapResPlay.gif)
+- 动捕结果展示2  ![动捕结果展示2](screenshots/mocapResPlay2.gif)
 
 
 
