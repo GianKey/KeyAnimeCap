@@ -28,44 +28,18 @@ KeyAnimeCap
   - 在3D模型上展示动画
 
 ### 展示
-##### 模型界面
-<div style="display:flex; justify-content: center;">
-    <div style="max-width:50%; margin-right:10px;">
-        <img src="screenshots/model.png" alt="Image 1" style="max-width:100%;">
-        <p style="text-align:center; font-size: 0.8em; color: #888;">模型管理界面</p>
-    </div>
-    <div style="max-width:50%;">
-        <img src="screenshots/FbxTab.png" alt="Image 2" style="max-width:100%;">
-        <p style="text-align:center; font-size: 0.8em; color: #888;">模型查看修改器</p>
-    </div>
-</div>
+#### 模型界面
 
-##### 动捕界面
+|![模型管理界面](screenshots/model.png)|![模型查看修改器](screenshots/FbxTab.png)|
+|---------------|-----------------|
 
-<div style="display:flex; justify-content: center;">
-    <div style="max-width:90%; margin-right:10px;">
-        <img src="screenshots/MocapStart.png" alt="Image 1" style="max-width:100%;">
-        <p style="text-align:center; font-size: 0.8em; color: #888;">选择视频，开始动捕</p>
-    </div>
-</div>
-<div style="display:flex; justify-content: center;">
-    <div style="max-width:100%; margin-right:10px;">
-        <img src="screenshots/mocapResvideo1.gif" alt="Image 1" style="max-width:100%;">
-        <p style="text-align:center; font-size: 0.8em; color: #888;">后端推理结果可视化</p>
-    </div>
-</div>
-<div style="display:flex; justify-content: center;">
-    <div style="max-width:90%; margin-right:10px;">
-        <img src="screenshots/mocapResPlay.gif" alt="Image 1" style="max-width:100%;">
-        <p style="text-align:center; font-size: 0.8em; color: #888;">动捕结果展示1</p>
-    </div>
-</div>
-<div style="display:flex; justify-content: center;">
-    <div style="max-width:90%; margin-right:10px;">
-        <img src="screenshots/mocapResPlay2.gif" alt="Image 1" style="max-width:100%;">
-        <p style="text-align:center; font-size: 0.8em; color: #888;">动捕结果展示2</p>
-    </div>
-</div>
+
+#### 动捕界面
+![选择视频，开始动捕](screenshots/MocapStart.png)
+![后端推理结果可视化](screenshots/mocapResvideo1.gif)<center>后端推理结果可视化</center>
+![动捕结果展示1](screenshots/mocapResPlay.gif)<center>动捕结果展示1</center>
+![动捕结果展示2](screenshots/mocapResPlay2.gif)<center>动捕结果展示2</center>
+
 
 
 ### 如何使用
