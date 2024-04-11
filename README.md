@@ -36,7 +36,7 @@ KeyAnimeCap
 
 #### 动捕界面
 - 选择视频，开始动捕![选择视频，开始动捕](screenshots/MocapStart.png)
-- 后端推理结果可视化![后端推理结果可视化](screenshots/mocapResvideo1.gif)
+- 后端推理结果可视化[后端推理结果可视化 (0:15)](screenshots/dancingRes1.MP4)
 - 动捕结果展示1![动捕结果展示1](screenshots/mocapResPlay.gif)
 - 动捕结果展示2  ![动捕结果展示2](screenshots/mocapResPlay2.gif)
 
