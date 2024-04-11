@@ -1,14 +1,4 @@
-/**
-  *  SysMocap PDF View page
-  *
-  *  Modify from Mozilla pdf.js (https://mozilla.github.io/pdf.js/)
-  *  To adapt from electron frameless window
-  *  Change to getting PDF path from node env args
-  * 
-  *  https://github.com/xianfei/SysMocap
-  * 
-  *  xianfei 2022.4
-  */ 
+
 
 /**
  * @licstart The following is the entire license notice for the
@@ -68,7 +58,6 @@ const OptionKind = {
 };
 exports.OptionKind = OptionKind;
 
-// modified by xianfei
 // add read pdf path from node env argv
 var pdfPath;
 for (var i = 0; i < process.argv.length; i++) {

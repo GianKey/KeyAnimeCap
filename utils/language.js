@@ -143,7 +143,7 @@ module.exports = {
             },
             tabSettings: {
                 disableUpdate:'Disable Checking Update Automatically',
-                desc: "By Xianfei, as Undergraduate Graduation Design Works",
+                desc: "",
                 document: {
                     name: "User Manual",
                     openDoc: "Show the User Manual",

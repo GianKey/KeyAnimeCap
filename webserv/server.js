@@ -1,14 +1,3 @@
-/**
- *  SysMocap Web Server
- * 
- *  Forwarding motion data with WebSocket and display over HTTP.
- *
- *  A part of SysMocap, open sourced under Mozilla Public License 2.0
- *
- *  https://github.com/xianfei/SysMocap
- *
- *  xianfei 2022.5
- */
 
 const express = require("express");
 const app = express();
